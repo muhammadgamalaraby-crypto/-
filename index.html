@@ -5,48 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>أسئلة QR</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#f3f5fa; --card:#fff; --text:#1d2433; --muted:#6b7385; --line:#e1e5ee; --accent:#2f6df6; --good:#2e9e5b; --bad:#d64545; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#12151c; --card:#1c2029; --text:#eef0f5; --muted:#9aa2b5; --line:#2c3240; --accent:#6c9bff; --good:#4cc47e; --bad:#ff7b7b; }
-  }
+  :root { --bg:#05060f; --text:#f1f3ff; --muted:#8f97b8; --line:rgba(140,150,255,.18); --blue:#4aa8ff; --violet:#8b6cff; --cyan:#3be3ff; --good:#4cd58a; --bad:#ff7b8a; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,"Segoe UI",Tahoma,sans-serif; line-height:1.6; }
-  .wrap { max-width:760px; margin:0 auto; padding:18px; }
+  html { background:var(--bg); }
+  body { margin:0; min-height:100vh; color:var(--text); line-height:1.7; font-family:"Cairo",system-ui,"Segoe UI",Tahoma,sans-serif;
+         background:
+           radial-gradient(60vw 50vh at 100% -5%, rgba(139,108,255,.38), transparent 70%),
+           radial-gradient(50vw 45vh at -5% 105%, rgba(74,168,255,.28), transparent 70%),
+           radial-gradient(40vw 40vh at 50% 120%, rgba(139,108,255,.18), transparent 70%),
+           var(--bg);
+         background-attachment:fixed; }
+  .wrap { max-width:780px; margin:0 auto; padding:22px 18px 50px; }
   .center { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:16px; }
-  .narrow { max-width:420px; width:100%; margin:0; }
-  h1 { font-size:1.3rem; margin:0 0 14px; }
-  h2 { font-size:1.05rem; margin:0 0 12px; }
-  label { display:block; font-size:.9rem; margin:12px 0 4px; color:var(--muted); }
-  input, textarea { width:100%; padding:12px; font:inherit; color:var(--text); background:transparent;
-                    border:1.5px solid var(--line); border-radius:10px; }
-  input:focus, textarea:focus { outline:none; border-color:var(--accent); }
-  textarea { min-height:90px; resize:vertical; }
-  button { font:inherit; cursor:pointer; border:0; border-radius:10px; padding:11px 18px; background:var(--accent); color:#fff; }
-  button.ghost { background:transparent; color:var(--text); border:1.5px solid var(--line); }
-  button.danger { background:transparent; color:var(--bad); border:1.5px solid var(--bad); }
-  button:disabled { opacity:.5; cursor:default; }
-  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .card { position:relative; background:linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+          border:1px solid var(--line); border-radius:22px; padding:22px; margin-bottom:18px;
+          backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+          box-shadow:0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); }
+  .narrow { max-width:430px; width:100%; margin:0; }
+  h1 { font-size:1.5rem; margin:0 0 14px; line-height:1.5; font-weight:700; }
+  h2 { font-size:1.05rem; margin:0 0 12px; font-weight:600; }
+  .grad { background:linear-gradient(90deg,var(--blue),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { font-size:.72rem; letter-spacing:.28em; color:var(--muted); text-transform:uppercase; margin-bottom:6px; direction:ltr; text-align:right; }
+  label { display:block; font-size:.88rem; margin:14px 0 5px; color:var(--muted); }
+  input, textarea { width:100%; padding:13px 14px; font:inherit; color:var(--text); background:rgba(255,255,255,.04);
+                    border:1px solid var(--line); border-radius:12px; }
+  input:focus, textarea:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(74,168,255,.18); }
+  textarea { min-height:100px; resize:vertical; }
+  button { font:inherit; font-weight:600; cursor:pointer; border:0; border-radius:999px; padding:11px 22px; background:#fff; color:#0a0c1a; transition:.15s; }
+  button:hover { box-shadow:0 0 22px rgba(139,108,255,.55); transform:translateY(-1px); }
+  button.ghost { background:rgba(255,255,255,.04); color:var(--text); border:1px solid var(--line); }
+  button.ghost:hover { border-color:var(--cyan); box-shadow:0 0 18px rgba(59,227,255,.3); }
+  button.danger { background:transparent; color:var(--bad); border:1px solid rgba(255,123,138,.5); }
+  button:disabled { opacity:.5; cursor:default; transform:none; box-shadow:none; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   .between { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
   .muted { color:var(--muted); font-size:.88rem; }
   .err { color:var(--bad); margin-top:10px; font-weight:600; }
   .ok { color:var(--good); font-weight:600; }
-  .q { border-top:1px solid var(--line); padding:14px 0; }
+  .q { border-top:1px solid var(--line); padding:16px 0; }
   .q:first-child { border-top:0; }
-  .q .t { font-weight:600; margin-bottom:6px; }
-  .bar { margin:10px 0; }
-  .bar .lbl { display:flex; justify-content:space-between; gap:10px; font-size:.95rem; }
-  .bar .track { height:10px; background:var(--line); border-radius:6px; overflow:hidden; margin-top:4px; }
-  .bar .fill { height:100%; background:var(--accent); }
+  .q .t { font-weight:600; font-size:1.05rem; margin-bottom:4px; }
+  .bar { margin:14px 0; }
+  .bar .lbl { display:flex; justify-content:space-between; gap:10px; }
+  .bar .track { height:10px; background:rgba(255,255,255,.07); border-radius:8px; overflow:hidden; margin-top:6px; }
+  .bar .fill { height:100%; border-radius:8px; background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet)); box-shadow:0 0 14px rgba(74,168,255,.6); }
   .tbl { overflow-x:auto; }
   table { width:100%; border-collapse:collapse; font-size:.92rem; }
-  th, td { text-align:right; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th, td { text-align:right; padding:10px; border-bottom:1px solid var(--line); vertical-align:top; }
   th { color:var(--muted); font-weight:600; white-space:nowrap; }
-  .modal { position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; padding:18px; z-index:10; }
+  .modal { position:fixed; inset:0; background:rgba(3,4,12,.75); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:18px; z-index:10; }
   .modal[hidden] { display:none; }
-  .modal .box { background:var(--card); border-radius:16px; padding:22px; max-width:380px; width:100%; text-align:center; }
-  #qrbox { display:inline-block; background:#fff; padding:14px; border-radius:12px; margin:10px 0; }
+  .modal .box { background:linear-gradient(160deg, rgba(40,44,90,.9), rgba(14,16,36,.95)); border:1px solid var(--line); border-radius:24px;
+                padding:24px; max-width:390px; width:100%; text-align:center; box-shadow:0 0 60px rgba(139,108,255,.35); }
+  #qrbox { display:inline-block; background:#fff; padding:14px; border-radius:16px; margin:12px 0; box-shadow:0 0 30px rgba(74,168,255,.45); }
   .link { word-break:break-all; direction:ltr; font-size:.8rem; color:var(--muted); }
   .big { text-align:center; }
   .big h1 { line-height:1.7; }
@@ -71,7 +85,7 @@
 <script>
   // ============ الإعدادات ============
   // الصق هنا رابط Apps Script (اللي بينتهي بـ /exec)
-  const API = "https://script.google.com/macros/s/AKfycbwPrXaLj3WR8CrT8aAfOt0Yea_sPT4vHk9n_xiMzG4s0tzlUzgiTRqOT4G5XX4ZW67s/exec";
+  const API = "ضع_رابط_APPS_SCRIPT_هنا";
   // ===================================
 
   const $ = (s) => document.querySelector(s);
@@ -93,7 +107,6 @@
   }
 
   const qid = new URLSearchParams(location.search).get("q");
-  qid ? respondent(qid) : admin();
 
   /* ================= صفحة اللي بيمسح الـ QR ================= */
   function msg(title, text, bad) {
@@ -124,7 +137,7 @@
 
     app.innerHTML =
       '<div class="center"><div class="card narrow">' +
-      '<div class="muted">السؤال</div><h1 id="qt"></h1>' +
+      '<div class="eyebrow">Question</div><h1 id="qt"></h1>' +
       '<label>الاسم (إجباري)</label><input id="nm" maxlength="80" autocomplete="name">' +
       '<label>الكلية (اختياري)</label><input id="cl" maxlength="80">' +
       '<label>إجابتك</label><textarea id="an" maxlength="500"></textarea>' +
@@ -161,7 +174,7 @@
   function loginView() {
     app.innerHTML =
       '<div class="center"><div class="card narrow">' +
-      "<h1>تسجيل الدخول</h1>" +
+      '<div class="eyebrow">Admin</div><h1>تسجيل <span class="grad">الدخول</span></h1>' +
       '<label>اليوزر</label><input id="u" autocomplete="username">' +
       '<label>الباسورد</label><input id="p" type="password" autocomplete="current-password">' +
       '<div class="err" id="er"></div>' +
@@ -182,7 +195,7 @@
     clearInterval(timer);
     app.innerHTML =
       '<div class="wrap">' +
-      '<div class="between" style="margin-bottom:14px"><h1 style="margin:0">لوحة التحكم</h1><button class="ghost" id="lo">خروج</button></div>' +
+      '<div class="between" style="margin-bottom:14px"><div><div class="eyebrow" style="margin:0">QR Quiz</div><h1 style="margin:0">لوحة <span class="grad">التحكم</span></h1></div><button class="ghost" id="lo">خروج</button></div>' +
       '<div class="card"><h2>سؤال جديد</h2>' +
       '<textarea id="nq" maxlength="500" placeholder="اكتب السؤال هنا"></textarea>' +
       '<div class="err" id="er"></div>' +
@@ -299,6 +312,8 @@
     await draw();
     timer = setInterval(draw, 10000);
   }
+  // تشغيل الصفحة (لازم يكون في الآخر)
+  qid ? respondent(qid) : admin();
 </script>
 </body>
 </html>
